@@ -7,9 +7,10 @@ Dieses Paket ist für die Einrichtung gedacht, nicht zum Installieren im Spiel.
 GitHub-Konto und öffentliches Repository sind inzwischen eingerichtet:
 [MR-Scarface-VR/MR_ScarfaceVR-FS25](https://github.com/MR-Scarface-VR/MR_ScarfaceVR-FS25).
 Der [erste gehostete Build](https://github.com/MR-Scarface-VR/MR_ScarfaceVR-FS25/actions/runs/40115334964)
-war erfolgreich. Die öffentliche Testversion ist als
-[v0.1.0.1-experimental](https://github.com/MR-Scarface-VR/MR_ScarfaceVR-FS25/releases/tag/v0.1.0.1-experimental)
-veröffentlicht. Der Nutzer hat den SignPath-Antrag selbst abgesendet; die Website
+war erfolgreich. Aktuelle unsignierte Testversion:
+[v0.1.0.3-experimental](https://github.com/MR-Scarface-VR/MR_ScarfaceVR-FS25/releases/tag/v0.1.0.3-experimental).
+Der gezielte Quest-2-Vergleich am 25.10.2026 bestätigte die Gelände-Korrektur;
+weitere PCs und vollständige Regressionstests bleiben offen. Der Nutzer hat den SignPath-Antrag selbst abgesendet; die Website
 zeigte die Versandbestätigung. Weitere Einrichtung erst nach Rückmeldung.
 
 ## Bereits lokal vorbereitet

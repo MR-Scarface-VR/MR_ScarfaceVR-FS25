@@ -14,7 +14,7 @@ PUBLIC_FILES = (
     'signing/artifact-configuration.xml', 'signing/SETUP.md', 'signing/APPLICATION_DRAFT.md',
     'native/proxy.cpp', 'native/dinput8.def', 'native/version.rc',
     'native/engine_probe.cpp', 'native/engine_probe.h', 'native/engine_addresses.h',
-    'native/engine_hooks.h', 'native/stereo.h', 'native/d3d12_copy.h',
+    'native/engine_hooks.h', 'native/stereo.h', 'native/d3d12_copy.h', 'native/terrain_camera.h',
     'native/openxr_bridge.cpp', 'native/openxr_bridge.h',
     'mod/FS25_MR_ScarfaceVR/modDesc.xml', 'mod/FS25_MR_ScarfaceVR/VR.lua',
     'tests/native_core_tests.cpp', 'tests/openxr_flow_tests.cpp',

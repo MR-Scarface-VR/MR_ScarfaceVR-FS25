@@ -1,13 +1,36 @@
 # MR_ScarfaceVR: test guide / Testablauf
 
 [Report a test / Testergebnis melden](https://github.com/MR-Scarface-VR/MR_ScarfaceVR-FS25/issues/new?template=test_report.md)
-· [Download 0.1.0.1](https://github.com/MR-Scarface-VR/MR_ScarfaceVR-FS25/releases/tag/v0.1.0.1-experimental)
+· [Download 0.1.0.3](https://github.com/MR-Scarface-VR/MR_ScarfaceVR-FS25/releases/tag/v0.1.0.3-experimental)
+
+## Terrain comparison / Gelände-Vergleich
+
+**0.1.0.3 terrain comparison passed:** one user confirmed Quest 2 / Meta Link on
+25 October 2026; live native logs confirm terrain-worker tracking. This targeted
+test does not establish long-session, other-PC or full regression coverage.
+For further tests, keep the mouse still
+near a field or textured ground. Turn your head 60–90 degrees to either side and
+look down; allow a few seconds for terrain tiles to load. Detail should follow
+the headset without requiring mouse movement. Compare while holding your head
+still and turning only the mouse camera. Repeat on foot and in a cab, then check
+F10 recentering, menu transitions and F11 off. Report any remaining difference.
+
+**Gelände-Vergleich mit 0.1.0.3 bestanden:** ein Nutzer bestätigte Quest 2 / Meta Link
+am 25.10.2026; native Logs bestätigen das Tracking im Gelände-Thread. Langzeittest,
+andere PCs und die vollständige erneute Funktionsprüfung sind damit nicht bestätigt.
+Für weitere Tests vor einem Feld oder
+einer gut erkennbaren Bodenstruktur die Maus stillhalten. Den Kopf 60–90 Grad zur
+Seite und nach unten drehen; der Gelände-Nachladung einige Sekunden geben.
+Die Details sollen dem Headset folgen, ohne dass eine Mausbewegung nötig ist.
+Zum Vergleich den Kopf stillhalten und nur die Maus-Kamera drehen. Zu Fuß und
+in der Kabine wiederholen; anschließend F10, Menüwechsel und F11 aus prüfen.
+Verbleibende Unterschiede bitte melden.
 
 ## English
 
 **First check:** Windows/D3D12, exactly FS25 **1.25.0.0**, Quest 2 connected through
 Meta Quest Link. The current DLL rejects other game builds. Other headsets are
-unverified. Version 0.1.0.1 is experimental and unsigned; do not disable Windows
+unverified. Version 0.1.0.3 is experimental and unsigned; do not disable Windows
 security protections to run it. Follow [installation](README.md#install-and-play)
 and start with a backed-up save or a separate test save.
 
@@ -47,7 +70,7 @@ There is no automatic upload or telemetry in the adapter.
 
 **Zuerst prüfen:** Windows/D3D12, exakt FS25 **1.25.0.0**, Quest 2 über Meta Quest
 Link verbunden. Andere Spielversionen werden abgelehnt, andere Headsets sind
-ungeprüft. Version 0.1.0.1 ist experimentell und unsigniert. Windows-Schutzfunktionen
+ungeprüft. Version 0.1.0.3 ist experimentell und unsigniert. Windows-Schutzfunktionen
 für den Test nicht abschalten. Nach der [Installationsanleitung](INSTALLATION.md)
 vorgehen und einen gesicherten oder eigenen Testspielstand verwenden.
 

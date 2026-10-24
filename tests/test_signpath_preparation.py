@@ -28,6 +28,7 @@ class SignPathPreparationTests(unittest.TestCase):
         files = public_files(ROOT)
         self.assertEqual(set(files), set(PUBLIC_FILES))
         self.assertIn('native/version.rc', files)
+        self.assertIn('native/terrain_camera.h', files)
         self.assertIn('LICENSE', files)
         self.assertIn('.github/workflows/build-and-sign.yml', files)
         self.assertFalse(any(name.startswith(('.analysis/', 'build/', 'dist/')) for name in files))

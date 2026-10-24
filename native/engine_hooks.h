@@ -1,6 +1,65 @@
 #pragma once
 #include <windows.h>
 #include <cstring>
+#include <cstdint>
+#include <algorithm>
+
+inline bool redirect_relative_call(unsigned char* call, const void* expected, const void* replacement) {
+    if (!call || !expected || !replacement || call[0] != 0xe8 ||
+        (reinterpret_cast<uintptr_t>(call + 1) & 3) != 0) return false;
+    int32_t oldOffset;
+    std::memcpy(&oldOffset, call + 1, sizeof(oldOffset));
+    const auto origin = reinterpret_cast<uintptr_t>(call + 5);
+    if (static_cast<int64_t>(origin) + oldOffset != reinterpret_cast<int64_t>(expected)) return false;
+    SYSTEM_INFO info{};
+    GetSystemInfo(&info);
+    const auto granularity = static_cast<uintptr_t>(info.dwAllocationGranularity);
+    const uintptr_t minimum = (std::max)(reinterpret_cast<uintptr_t>(info.lpMinimumApplicationAddress),
+        origin > 0x7ffe0000 ? origin - 0x7ffe0000 : granularity);
+    const uintptr_t maximum = (std::min)(reinterpret_cast<uintptr_t>(info.lpMaximumApplicationAddress), origin + 0x7ffe0000);
+    unsigned char* relay = nullptr;
+    for (uintptr_t address = (minimum + granularity - 1) & ~(granularity - 1); address < maximum;) {
+        MEMORY_BASIC_INFORMATION region{};
+        if (!VirtualQuery(reinterpret_cast<void*>(address), &region, sizeof(region))) break;
+        if (region.State == MEM_FREE && maximum - address >= 4096 && region.RegionSize >= 4096) {
+            relay = static_cast<unsigned char*>(VirtualAlloc(reinterpret_cast<void*>(address), 4096,
+                MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE));
+            if (relay) break;
+        }
+        const auto end = reinterpret_cast<uintptr_t>(region.BaseAddress) + region.RegionSize;
+        const auto next = (end + granularity - 1) & ~(granularity - 1);
+        if (next <= address) break;
+        address = next;
+    }
+    if (!relay) return false;
+    const unsigned char jump[] = {0xff, 0x25, 0, 0, 0, 0};
+    std::memcpy(relay, jump, sizeof(jump));
+    std::memcpy(relay + sizeof(jump), &replacement, sizeof(replacement));
+    DWORD previous;
+    if (!VirtualProtect(relay, 4096, PAGE_EXECUTE_READ, &previous) ||
+        !FlushInstructionCache(GetCurrentProcess(), relay, 14) ||
+        !VirtualProtect(call, 5, PAGE_EXECUTE_READWRITE, &previous)) {
+        VirtualFree(relay, 0, MEM_RELEASE);
+        return false;
+    }
+    const auto newOffset = static_cast<LONG>(reinterpret_cast<int64_t>(relay) - static_cast<int64_t>(origin));
+    const bool applied = InterlockedCompareExchange(reinterpret_cast<volatile LONG*>(call + 1), newOffset, oldOffset) == oldOffset;
+    const bool flushed = FlushInstructionCache(GetCurrentProcess(), call, 5) != FALSE;
+    DWORD ignored;
+    if (!flushed) {
+        InterlockedCompareExchange(reinterpret_cast<volatile LONG*>(call + 1), oldOffset, newOffset);
+        FlushInstructionCache(GetCurrentProcess(), call, 5);
+    }
+    const bool restored = VirtualProtect(call, 5, previous, &ignored) != FALSE;
+    if (!restored) {
+        InterlockedCompareExchange(reinterpret_cast<volatile LONG*>(call + 1), oldOffset, newOffset);
+        FlushInstructionCache(GetCurrentProcess(), call, 5);
+        VirtualProtect(call, 5, previous, &ignored);
+    }
+    // Keep exposed relays for process lifetime: an in-flight call may still use one.
+    if (!applied) VirtualFree(relay, 0, MEM_RELEASE);
+    return applied && flushed && restored;
+}
 
 inline bool native_perspective(const void* camera) {
     return camera && *(static_cast<const char*>(camera) + 0x168) == 0;

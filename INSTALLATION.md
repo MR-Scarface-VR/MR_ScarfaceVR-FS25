@@ -1,9 +1,12 @@
 # MR_ScarfaceVR für FS25 — Installation
 
 Von **MR_Scarface**. Inoffizieller **Mod for Farming Simulator**.
-Version 0.1.0.1: unsignierter experimenteller Build mit neuer Kennzeichnung.
-Auch dieser Build bestand am 24.10.2026 den kurzen Quest-2-Praxistest auf einem
-PC: Menü, 3D/Kopftracking, zu Fuß/Kabine, normale Steuerung und F10.
+Version 0.1.0.3: unsignierter experimenteller Build mit Gelände-Korrektur.
+Der gezielte Vergleich am 25.10.2026 mit Quest 2 / Meta Link auf einem PC
+bestätigte: Boden-/Feldtexturen folgen dem Headset statt der Maus-Kamera.
+Der frühere Build 0.1.0.1 bestand den kurzen Funktionstest für Menü, 3D/Tracking,
+zu Fuß/Kabine, normale Steuerung und F10; eine vollständige Wiederholung und
+Langzeitprüfungen mit 0.1.0.3 stehen noch aus.
 
 ## Voraussetzungen
 

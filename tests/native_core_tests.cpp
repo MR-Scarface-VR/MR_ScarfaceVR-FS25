@@ -2,12 +2,14 @@
 #include "../native/stereo.h"
 #include "../native/engine_addresses.h"
 #include "../native/d3d12_copy.h"
+#include "../native/terrain_camera.h"
 #include <cassert>
 #include <cmath>
 #include <cstdio>
 #include <limits>
 #include <array>
 #include <cstring>
+#include <thread>
 
 namespace {
 int first() { return 1; }
@@ -15,6 +17,26 @@ int second() { return 2; }
 }
 
 int main() {
+    auto callFixture = static_cast<unsigned char*>(VirtualAlloc(nullptr, 4096, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE));
+    assert(callFixture);
+    const unsigned char fixtureCode[] = {0x90,0x90,0x90,0x48,0x83,0xec,0x28,0xe8,0x34,0,0,0,0x48,0x83,0xc4,0x28,0xc3};
+    const unsigned char returnOne[] = {0xb8,1,0,0,0,0xc3};
+    std::memcpy(callFixture, fixtureCode, sizeof(fixtureCode));
+    std::memcpy(callFixture + 64, returnOne, sizeof(returnOne));
+    DWORD fixtureProtection;
+    assert(VirtualProtect(callFixture, 4096, PAGE_EXECUTE_READ, &fixtureProtection));
+    assert(FlushInstructionCache(GetCurrentProcess(), callFixture, 4096));
+    auto invokeFixture = reinterpret_cast<int(*)()>(callFixture);
+    assert(invokeFixture() == 1);
+    assert(!redirect_relative_call(callFixture + 7, callFixture + 65, reinterpret_cast<void*>(&second)));
+    assert(invokeFixture() == 1);
+    assert(redirect_relative_call(callFixture + 7, callFixture + 64, reinterpret_cast<void*>(&second)));
+    assert(invokeFixture() == 2);
+    assert(!redirect_relative_call(callFixture + 7, callFixture + 64, reinterpret_cast<void*>(&first)));
+    assert(invokeFixture() == 2);
+    assert(!redirect_relative_call(callFixture + 6, callFixture + 64, reinterpret_cast<void*>(&second)));
+    assert(!redirect_relative_call(nullptr, callFixture + 64, reinterpret_cast<void*>(&second)));
+    assert(VirtualFree(callFixture, 0, MEM_RELEASE));
     std::array<unsigned char, 4096> image{};
     auto dos = reinterpret_cast<IMAGE_DOS_HEADER*>(image.data());
     dos->e_magic = IMAGE_DOS_SIGNATURE; dos->e_lfanew = 128;
@@ -65,6 +87,64 @@ int main() {
     assert(native_swapchain(backend.data(), windowTable, windowTable) == nullptr);
     constexpr float s = 0.70710678118f;
     const Quaternion turn{0, s, 0, s};
+    TerrainCameraInfo terrain{};
+    terrain.position = {10, 2, 20};
+    terrain.forward = {0, 0, -1};
+    terrain.horizontalForwardZ = -1;
+    terrain.right = {1, 0, 0};
+    terrain.up = {0, 1, 0};
+    terrain.aspect = 1.6f;
+    terrain.nearClip = 0.1f;
+    const auto untrackedTerrain = terrain;
+    TerrainTrackingState workerTracking;
+    workerTracking.publish(Pose{turn, {0.5f, 0, 0}}, 1.4f, 1.1f, 1000);
+    auto workerCamera = untrackedTerrain;
+    bool workerApplied = false;
+    std::thread terrainWorker([&] { workerApplied = workerTracking.apply(workerCamera, 1001); });
+    terrainWorker.join();
+    assert(workerApplied);
+    assert(std::abs(workerCamera.forward.x + 1) < 0.00001f);
+    assert(std::abs(workerCamera.position.x - 10.5f) < 0.00001f);
+    workerCamera = untrackedTerrain;
+    assert(!workerTracking.apply(workerCamera, 1251));
+    assert(std::memcmp(&workerCamera, &untrackedTerrain, sizeof(workerCamera)) == 0);
+    assert(!workerTracking.apply(workerCamera, 999));
+    workerTracking.clear();
+    assert(!workerTracking.apply(workerCamera, 1001));
+    workerTracking.publish(Pose{turn, {}}, 1, 1, 1000);
+    workerTracking.publish(Pose{{0, 0, 0, 0}, {}}, 1, 1, 1001);
+    assert(!workerTracking.apply(workerCamera, 1001));
+    assert(track_terrain_camera(terrain, Pose{turn, {0.5f, 0.25f, -0.5f}}, 1.4f, 1.1f));
+    assert(std::abs(terrain.position.x - 10.5f) < 0.00001f);
+    assert(std::abs(terrain.position.y - 2.25f) < 0.00001f);
+    assert(std::abs(terrain.position.z - 19.5f) < 0.00001f);
+    assert(std::abs(terrain.forward.x + 1) < 0.00001f);
+    assert(std::abs(terrain.forward.z) < 0.00001f);
+    assert(std::abs(terrain.right.z + 1) < 0.00001f);
+    assert(std::abs(terrain.horizontalForwardX + 1) < 0.00001f);
+    assert(std::tan(terrain.fovY / 2) >= 1.1f);
+    assert(std::tan(terrain.fovX / 2) >= 1.4f);
+    assert(terrain.nearClip == 0.1f && terrain.aspect == 1.6f);
+    const auto unchangedTerrain = terrain;
+    assert(!track_terrain_camera(terrain, Pose{{0, 0, 0, 0}, {}}, 1, 1));
+    assert(std::memcmp(&terrain, &unchangedTerrain, sizeof(terrain)) == 0);
+    terrain.orthographic = 1;
+    assert(!track_terrain_camera(terrain, Pose{{0, 0, 0, 1}, {}}, 1, 1));
+    terrain = unchangedTerrain;
+    terrain.aspect = 0;
+    assert(!track_terrain_camera(terrain, Pose{{0, 0, 0, 1}, {}}, 1, 1));
+    terrain = unchangedTerrain;
+    assert(!track_terrain_camera(terrain, Pose{{0, 0, 0, 1}, {}}, std::numeric_limits<float>::infinity(), 1));
+    terrain = untrackedTerrain;
+    terrain.right = {0, 0, -1};
+    terrain.forward = {-1, 0, 0};
+    assert(track_terrain_camera(terrain, Pose{turn, {0.5f, 0, -0.5f}}, 1, 1));
+    assert(std::abs(terrain.forward.z - 1) < 0.00001f && std::abs(terrain.forward.x) < 0.00001f);
+    assert(std::abs(terrain.position.x - 9.5f) < 0.00001f && std::abs(terrain.position.z - 19.5f) < 0.00001f);
+    terrain = untrackedTerrain;
+    assert(track_terrain_camera(terrain, Pose{{s, 0, 0, s}, {}}, 1, 1));
+    assert(std::abs(terrain.forward.y - 1) < 0.00001f);
+    assert(std::isfinite(terrain.horizontalForwardX) && terrain.horizontalForwardZ == -1);
     const auto rotated = rotate(turn, {0, 0, -1});
     assert(std::abs(rotated.x + 1) < 0.00001f && std::abs(rotated.z) < 0.00001f);
     const Pose head{turn, {3, 2, 5}};
@@ -104,5 +184,5 @@ int main() {
     assert(replace_slot(&slot, reinterpret_cast<void*>(&second), reinterpret_cast<void*>(&first)));
     assert(reinterpret_cast<int(*)()>(slot)() == 1);
     assert(!replace_slot(nullptr, reinterpret_cast<void*>(&first), reinterpret_cast<void*>(&second)));
-    std::puts("PASS: eye offsets and guarded real vtable-slot replacement");
+    std::puts("PASS: tracking math, terrain camera/basis/FOV, guarded real call redirection and vtable replacement");
 }

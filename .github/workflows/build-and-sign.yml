@@ -93,8 +93,8 @@ jobs:
           }
           $version = (Get-Item signed/dinput8.dll).VersionInfo
           if ($version.CompanyName -ne 'MR_Scarface' -or
-              $version.ProductName -ne 'MR_ScarfaceVR for FS25' -or $version.ProductVersion -ne '0.1.0.1' -or
-              $version.FileVersion -ne '0.1.0.1' -or $version.OriginalFilename -ne 'dinput8.dll') {
+              $version.ProductName -ne 'MR_ScarfaceVR for FS25' -or $version.ProductVersion -ne '0.1.0.3' -or
+              $version.FileVersion -ne '0.1.0.3' -or $version.OriginalFilename -ne 'dinput8.dll') {
             throw 'Signed DLL metadata does not match the approved artifact.'
           }
           $hash = (Get-FileHash signed/dinput8.dll -Algorithm SHA256).Hash

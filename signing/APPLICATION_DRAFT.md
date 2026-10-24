@@ -34,9 +34,12 @@ normal keyboard/mouse, gamepad or wheel controls. It is a single-player mod.
 The exact supported game is FS25 1.25.0.0. An initial Quest 2 user has confirmed
 walking, vehicle-cab play, head rotation/translation, recentering and menu changes.
 There is not yet an established public user community or independent multi-PC
-test history. The source repository and successful hosted build are public. The current
+test history. The source repository and successful hosted build are public. The earlier
 0.1.0.1 unsigned pilot also passed the short Quest 2 menu/world/tracking/controls/
-recenter test on one PC. See the release page for experimental package availability.
+recenter test on one PC. Version 0.1.0.3 additionally passed a targeted terrain-detail comparison on the
+same Quest 2 / Meta Link setup on 25 October 2026; full regression was not repeated.
+It supplies headset tracking to the terrain worker through a guarded game-local
+call redirection. See the release page for experimental package availability.
 
 The project was developed with AI assistance. The maintainer is responsible for
 review, maintenance and release approval; AI assistance is not independent review.

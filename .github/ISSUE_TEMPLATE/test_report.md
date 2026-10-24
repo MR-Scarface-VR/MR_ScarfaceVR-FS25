@@ -1,7 +1,7 @@
 ---
 name: "VR test / VR-Test"
 about: "Report a successful test or a problem / Erfolg oder Fehler melden"
-title: "[Test 0.1.0.1] "
+title: "[Test 0.1.0.3] "
 ---
 
 Please fill in English or German. Reports are public; remove personal information
@@ -31,6 +31,7 @@ Use PASS / FAIL / NOT TESTED, or OK / FEHLER / NICHT GETESTET.
 | Head rotation and translation / Kopfdrehung und seitliche Bewegung | |
 | Walking and normal controls / Zu Fuß mit normaler Steuerung | |
 | Vehicle cab and normal controls / Kabine mit normaler Steuerung | |
+| Terrain detail follows head / Bodenauflösung folgt dem Kopf | |
 | F10 recenter / F10-Neuzentrierung | |
 | Menu/world switching / Menüwechsel | |
 | Longer session, actual duration above / Längerer Betrieb, Dauer oben | |

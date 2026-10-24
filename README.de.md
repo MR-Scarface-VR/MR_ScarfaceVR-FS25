@@ -2,16 +2,26 @@
 
 Von **MR_Scarface**. Inoffizieller experimenteller VR-Mod.
 
+**Version 0.1.0.3 — Gelände-Korrektur:** Die Gelände-Texturen folgen jetzt dem
+VR-Kopftracking. Ein Nutzer bestätigte den Vergleich mit Quest 2 / Meta Link am
+25.10.2026; das Log bestätigt die Übergabe an den Gelände-Thread. Automatisierte
+Prüfungen bestanden; weitere Regressionstests und andere PCs/Headsets bleiben offen.
+In 0.1.0.1 konnten Boden-/Feldtexturen außerhalb der Maus-Blickrichtung
+unscharf bleiben. 0.1.0.3 übergibt das Kopftracking an den Gelände-Thread.
+[Gezielter Vergleichstest](TESTING.md#terrain-comparison--gelände-vergleich).
+
 [English](README.md) · [Testablauf](TESTING.md#deutsch) ·
 [Testergebnis melden](https://github.com/MR-Scarface-VR/MR_ScarfaceVR-FS25/issues/new?template=test_report.md)
 
-**Stand 0.1.0.1:** Neue Projektkennzeichnung und DLL-Metadaten für die
+**Vorheriger Stand 0.1.0.1:** Neue Projektkennzeichnung und DLL-Metadaten für die
 SignPath-Vorbereitung. Noch unsigniert. Auch dieser Build bestand am
 24.10.2026 den kurzen Quest-2-Praxistest: Menü, räumliche Welt, Kopftracking,
 Spielen zu Fuß und in der Kabine, normale Steuerung und F10-Neuzentrierung.
 Bestätigt auf einem PC durch einen Nutzer; kein Langzeit- oder Mehr-PC-Test.
 
-[Testpakete herunterladen](https://github.com/MR-Scarface-VR/MR_ScarfaceVR-FS25/releases).
+[Testpaket 0.1.0.3 herunterladen](https://github.com/MR-Scarface-VR/MR_ScarfaceVR-FS25/releases/tag/v0.1.0.3-experimental).
+Die verteilte DLL stammt aus dem lokalen MSVC-Build; die getesteten Bytes sind
+unverändert. Quellen und automatische Prüfungen sind öffentlich.
 
 [Installation und Bedienung](INSTALLATION.md).
 

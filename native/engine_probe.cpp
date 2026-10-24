@@ -3,6 +3,7 @@
 #include "stereo.h"
 #include "openxr_bridge.h"
 #include "engine_addresses.h"
+#include "terrain_camera.h"
 #include <wrl/client.h>
 #include <bcrypt.h>
 #include <array>
@@ -46,6 +47,32 @@ std::atomic<DWORD> scriptThread = 0;
 using Counter = BOOL(WINAPI*)(LARGE_INTEGER*);
 Counter originalCounter = nullptr;
 void register_lua();
+void log(const char* format, ...);
+using GetTerrainCamera = void(*)(void*, float, void*, TerrainCameraInfo*);
+GetTerrainCamera originalTerrainCamera = nullptr;
+TerrainTrackingState terrainTracking;
+
+void terrain_camera(void* camera, float aspect, void* terrain, TerrainCameraInfo* output) {
+    originalTerrainCamera(camera, aspect, terrain, output);
+    if (!output || !worldMode.load() || !terrainTracking.apply(*output, GetTickCount64())) return;
+    static std::atomic<unsigned> samples = 0;
+    const auto sample = samples.fetch_add(1) + 1;
+    if (sample <= 3 || sample % 600 == 0) {
+        log("VR terrain streaming camera: sample=%u thread=%lu forward=(%.3f,%.3f,%.3f) fov=(%.3f,%.3f); base camera unchanged.",
+            sample, GetCurrentThreadId(), output->forward.x, output->forward.y, output->forward.z, output->fovX, output->fovY);
+    }
+}
+
+void publish_terrain_tracking() {
+    if (!xrDrawing || !worldMode.load()) { terrainTracking.clear(); return; }
+    float tanX = 0, tanY = 0;
+    for (unsigned eye = 0; eye < 2; ++eye) {
+        const auto fov = vr_eye_fov(eye);
+        tanX = (std::max)({tanX, std::abs(std::tan(fov.angleLeft)), std::abs(std::tan(fov.angleRight))});
+        tanY = (std::max)({tanY, std::abs(std::tan(fov.angleUp)), std::abs(std::tan(fov.angleDown))});
+    }
+    terrainTracking.publish(vr_head_pose(), tanX, tanY, GetTickCount64());
+}
 
 BOOL WINAPI counter(LARGE_INTEGER* value) {
     const BOOL result = originalCounter(value);
@@ -203,7 +230,7 @@ bool connect_swapchain(void* device) {
 }
 
 int lua_world(void*) { worldMode.store(true); return 0; }
-int lua_menu(void*) { worldMode.store(false); return 0; }
+int lua_menu(void*) { worldMode.store(false); terrainTracking.clear(); return 0; }
 
 void register_lua() {
     if (luaRegistered) return;
@@ -317,6 +344,7 @@ void render(void* application) {
     (void)base;
 #endif
     xrDrawing = vr_world_frame();
+    publish_terrain_tracking();
     active.store(xrDrawing || (stereoEnabled.load() && !vr_frame_active()));
     originalRender(application);
     active.store(false);
@@ -393,6 +421,13 @@ void start_engine_probe(void (*logger)(const char*)) {
             return;
         }
         ++applied;
+    }
+    originalTerrainCamera = reinterpret_cast<GetTerrainCamera>(base + engine_address::terrainCameraInfo);
+    if (redirect_relative_call(base + engine_address::terrainCameraCall,
+            reinterpret_cast<void*>(originalTerrainCamera), reinterpret_cast<void*>(&terrain_camera))) {
+        log("Terrain virtual-texture camera call verified and redirected; VR pose affects terrain detail selection only.");
+    } else {
+        log("Terrain virtual-texture correction unavailable: call guard/near relay failed; original terrain behavior retained.");
     }
     log("Approved FS25 SHA-256 verified. MR_ScarfaceVR OpenXR adapter installed. "
         "F9 desktop stereo diagnostic (default off), F10 recenter, F11 VR toggle (default off). Headset acceptance pending.");

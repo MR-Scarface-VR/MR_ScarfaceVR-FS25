@@ -3,7 +3,14 @@
 **Play Farming Simulator 25 in VR with stereo rendering and head tracking.**
 A free, unofficial, experimental **Mod for Farming Simulator**, maintained by **MR_Scarface**.
 
-[**Download the test package**](https://github.com/MR-Scarface-VR/MR_ScarfaceVR-FS25/releases/tag/v0.1.0.1-experimental) ·
+**Version 0.1.0.3 — terrain fix:** terrain virtual-texture detail follows VR head
+tracking. One user confirmed the terrain comparison on Quest 2 / Meta Link on
+25 October 2026; live logs confirm tracking reached the terrain worker. Automated
+checks pass. Broader regression testing and other PCs/headsets remain unverified.
+In 0.1.0.1, terrain could stay blurry outside the mouse-camera direction.
+Version 0.1.0.3 supplies headset tracking to the terrain worker. See the [terrain comparison test](TESTING.md#terrain-comparison--gelände-vergleich).
+
+[**Download the test package**](https://github.com/MR-Scarface-VR/MR_ScarfaceVR-FS25/releases/tag/v0.1.0.3-experimental) ·
 [**Report a test or problem**](https://github.com/MR-Scarface-VR/MR_ScarfaceVR-FS25/issues/new?template=test_report.md) ·
 [**Deutsch**](README.de.md)
 
@@ -15,8 +22,9 @@ using the [test report](https://github.com/MR-Scarface-VR/MR_ScarfaceVR-FS25/iss
 The [short test guide](TESTING.md#english) covers menus, walking, vehicle cabs,
 head movement, normal controls and recentering. No automatic telemetry.
 
-**Version 0.1.0.1 is unsigned and experimental.** One user on one PC confirmed
-these functions on 24 October 2026. Other PCs/headsets and longer sessions remain
+**Version 0.1.0.3 is unsigned and experimental.** The earlier 0.1.0.1 passed
+a short check of the functions below on one PC on 24 October 2026. The 0.1.0.3
+headset test specifically confirmed the terrain fix on the same setup. Other PCs/headsets and longer sessions remain
 unverified. This is not a claim of general compatibility.
 
 ## What you get
@@ -41,8 +49,8 @@ are not confirmed. Use your own legitimate game installation; no game files are 
 
 ## Install and play
 
-1. Close FS25. Download `MR_ScarfaceVR_FS25_v0.1.0.1_Experimental.zip` from the
-   [release page](https://github.com/MR-Scarface-VR/MR_ScarfaceVR-FS25/releases/tag/v0.1.0.1-experimental)
+1. Close FS25. Download `MR_ScarfaceVR_FS25_v0.1.0.3_Experimental.zip` from the
+   [release page](https://github.com/MR-Scarface-VR/MR_ScarfaceVR-FS25/releases/tag/v0.1.0.3-experimental)
    and extract the outer package. Read its `START_HIER.txt`.
 2. Copy `x64/dinput8.dll` beside `x64/FarmingSimulator2025Game.exe` in the game
    installation. **Do not overwrite a DLL belonging to another mod.**
@@ -90,7 +98,8 @@ is responsible for review, maintenance and releases. No GIANTS or Meta endorseme
 or official partnership is claimed.
 
 The current release links its source commit and includes `source.zip`, a manifest
-and SHA256 checksums. Release assets are not silently replaced. Public builds run
+and SHA256 checksums. Release assets are not silently replaced. The distributed DLL was built locally with MSVC; its exact tested bytes are
+preserved. Source builds and automated checks also run
 [on GitHub Actions](https://github.com/MR-Scarface-VR/MR_ScarfaceVR-FS25/actions).
 
 Build with an existing MSVC x64/Windows SDK, PowerShell and Python:
