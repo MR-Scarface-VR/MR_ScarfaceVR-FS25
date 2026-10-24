@@ -6,16 +6,16 @@ that planned account security, public releases or CI runs already exist.
 ## Applicant details
 
 - Public maintainer alias: MR_Scarface
-- Project contact email: [PROJECT CONTACT EMAIL]
+- Project contact email: provided privately in the application form; not published here.
 - GitHub account: MR-Scarface-VR
 - Project: MR_ScarfaceVR for FS25
 - Repository: https://github.com/MR-Scarface-VR/MR_ScarfaceVR-FS25
 - Homepage: https://github.com/MR-Scarface-VR/MR_ScarfaceVR-FS25#readme
 - Release page: https://github.com/MR-Scarface-VR/MR_ScarfaceVR-FS25/releases
-- Public successful workflow run: https://github.com/MR-Scarface-VR/MR_ScarfaceVR-FS25/actions/runs/40115334964
+- Public successful workflow run: https://github.com/MR-Scarface-VR/MR_ScarfaceVR-FS25/actions/runs/40115625932
 - License: MIT for our own code; official Khronos OpenXR headers retain MIT notices.
 - Maintainers / reviewers / signing approvers: MR_Scarface (@MR-Scarface-VR), initial single-maintainer project
-- MFA enabled for all relevant accounts: [CONFIRM AFTER CONFIGURING]
+- GitHub MFA: enabled and confirmed. SignPath account/MFA: to configure after onboarding.
 
 Public branding is MR_Scarface / MR_ScarfaceVR for FS25. If the application
 process requires a private legal name or other personal verification data,
@@ -32,8 +32,9 @@ normal keyboard/mouse, gamepad or wheel controls. It is a single-player mod.
 The exact supported game is FS25 1.25.0.0. An initial Quest 2 user has confirmed
 walking, vehicle-cab play, head rotation/translation, recentering and menu changes.
 There is not yet an established public user community or independent multi-PC
-test history. The source repository and first successful hosted build are public;
-a packaged public release has not yet been published.
+test history. The source repository and successful hosted build are public. The current
+0.1.0.1 unsigned pilot also passed the short Quest 2 menu/world/tracking/controls/
+recenter test on one PC. See the release page for experimental package availability.
 
 The project was developed with AI assistance. The maintainer is responsible for
 review, maintenance and release approval; AI assistance is not independent review.

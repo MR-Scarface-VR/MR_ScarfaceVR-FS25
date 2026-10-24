@@ -2,8 +2,8 @@
 
 Von **MR_Scarface**. Inoffizieller **Mod for Farming Simulator**.
 Version 0.1.0.1: unsignierter experimenteller Build mit neuer Kennzeichnung.
-Der vorherige Funktionsstand bestand den kurzen Quest-2-Praxistest; dieser neue
-Build muss noch erneut im Headset geprüft werden.
+Auch dieser Build bestand am 24.10.2026 den kurzen Quest-2-Praxistest auf einem
+PC: Menü, 3D/Kopftracking, zu Fuß/Kabine, normale Steuerung und F10.
 
 ## Voraussetzungen
 

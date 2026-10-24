@@ -22,7 +22,8 @@ nicht in einen zusätzlichen Unterordner namens `repository`.
 Bei Browser-Uploads sicherstellen, dass `.github/workflows/build-and-sign.yml`
 und `.gitignore` mit übernommen werden. Alternativ mit Git kopieren/committen.
 Das Spielpaket `MR_ScarfaceVR_FS25_Experimental.zip` ist ein separates Paket.
-Es enthält den neuen unsignierten Stand 0.1.0.1; der erneute Headset-Test steht aus.
+Stand 0.1.0.1 ist unsigniert; der erneute kurze Quest-2-Test wurde am
+24.10.2026 vom Nutzer bestätigt. GitHub-MFA ist aktiviert.
 
 ## 1. GitHub-Konto und Repository
 
@@ -50,9 +51,8 @@ Headset-Ergebnis ist noch keine öffentliche Projektreputation.
 
 Den veröffentlichten Build, seine Quellen und Prüfsummen eindeutig zuordnen.
 Das vorhandene getestete Spielpaket ist noch unsigniert. Die neue lokale DLL
-enthält zusätzliche Versionsmetadaten und ist ein neuer Build: vor Verwendung
-als veröffentlichter Spiel-Build erneut mit FS25/Quest testen. Die Metadaten
-ändern nicht absichtlich das VR-Verhalten, ersetzen aber keinen Praxistest.
+enthält zusätzliche Versionsmetadaten. Auch dieser Build bestand inzwischen
+den kurzen FS25/Quest-Test. Andere PCs/Headsets und längerer Betrieb bleiben ungeprüft.
 
 Für das endgültige Paket müssen bei jeder anderen DLL die DLL-Prüfsumme im
 Manifest, die Dateiprüfsummen und die ZIP-Prüfsumme erneuert werden. Keine neue
@@ -122,5 +122,5 @@ Ein Zertifikatswechsel erfordert die bewusste Anpassung des Fingerabdrucks.
 
 Die drei Workflow-Actions sind auf am 24.10.2026 über GitHubs öffentliche API
 aufgelöste Commits der Tags checkout v7.0.1, upload-artifact v7 und SignPath v3
-festgelegt. Künftige Updates bewusst prüfen. Der echte Cloud-Ablauf lässt sich
-ohne GitHub-Repository und SignPath-Freischaltung noch nicht ausführen.
+festgelegt. Künftige Updates bewusst prüfen. Der gehostete Build wurde erfolgreich geprüft. Der Signierablauf benötigt
+weiterhin die Aufnahme und Freischaltung durch SignPath.

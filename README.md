@@ -3,9 +3,12 @@
 Von **MR_Scarface**. Inoffizieller experimenteller VR-Mod.
 
 **Stand 0.1.0.1:** Neue Projektkennzeichnung und DLL-Metadaten für die
-SignPath-Vorbereitung. Noch unsigniert; dieser neue Build wurde noch nicht
-erneut im Headset getestet. Der unten beschriebene erfolgreiche Praxistest
-bezieht sich auf den vorherigen Funktionsstand 0.1.0.0.
+SignPath-Vorbereitung. Noch unsigniert. Auch dieser Build bestand am
+24.10.2026 den kurzen Quest-2-Praxistest: Menü, räumliche Welt, Kopftracking,
+Spielen zu Fuß und in der Kabine, normale Steuerung und F10-Neuzentrierung.
+Bestätigt auf einem PC durch einen Nutzer; kein Langzeit- oder Mehr-PC-Test.
+
+[Testpakete herunterladen](https://github.com/MR-Scarface-VR/MR_ScarfaceVR-FS25/releases).
 
 [Installation und Bedienung](INSTALLATION.md).
 
