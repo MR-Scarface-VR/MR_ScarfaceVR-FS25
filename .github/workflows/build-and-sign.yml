@@ -1,0 +1,108 @@
+name: Build and optionally request signing
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      request_signing:
+        description: Request signing after SignPath acceptance and configuration
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  build:
+    runs-on: windows-2022
+    timeout-minutes: 20
+    outputs:
+      unsigned-artifact-id: ${{ steps.upload.outputs.artifact-id }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Validate signing request
+        if: github.event_name == 'workflow_dispatch' && inputs.request_signing
+        shell: pwsh
+        env:
+          SIGNPATH_ENABLED: ${{ vars.SIGNPATH_ENABLED }}
+        run: |
+          if ($env:GITHUB_REF -ne 'refs/heads/main' -or $env:SIGNPATH_ENABLED -ne 'true') {
+            throw 'Signing requires main and SIGNPATH_ENABLED=true after project acceptance.'
+          }
+      - name: Build and test native DLL
+        shell: pwsh
+        run: ./build.ps1
+      - name: Run Python tests
+        shell: pwsh
+        run: python -m unittest discover -s tests -v
+      - name: Upload unsigned native DLL
+        id: upload
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: mr-scarfacevr-native-unsigned
+          path: build/dinput8.dll
+          if-no-files-found: error
+          retention-days: 14
+
+  sign:
+    if: github.event_name == 'workflow_dispatch' && inputs.request_signing && github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: windows-2022
+    environment: signpath
+    timeout-minutes: 75
+    steps:
+      - name: Validate SignPath configuration
+        shell: pwsh
+        env:
+          ORGANIZATION_ID: ${{ vars.SIGNPATH_ORGANIZATION_ID }}
+          PROJECT: ${{ vars.SIGNPATH_PROJECT_SLUG }}
+          POLICY: ${{ vars.SIGNPATH_SIGNING_POLICY_SLUG }}
+          THUMBPRINT: ${{ vars.SIGNPATH_CERTIFICATE_THUMBPRINT }}
+          API_TOKEN: ${{ secrets.SIGNPATH_API_TOKEN }}
+        run: |
+          foreach ($value in @($env:ORGANIZATION_ID, $env:PROJECT, $env:POLICY, $env:THUMBPRINT, $env:API_TOKEN)) {
+            if ([string]::IsNullOrWhiteSpace($value)) { throw 'SignPath configuration is incomplete.' }
+          }
+      - name: Submit and wait for human approval in SignPath
+        uses: signpath/github-action-submit-signing-request@f6d04783b4569d051e0c80105fe66e82819d0092 # v3
+        with:
+          api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
+          organization-id: ${{ vars.SIGNPATH_ORGANIZATION_ID }}
+          project-slug: ${{ vars.SIGNPATH_PROJECT_SLUG }}
+          signing-policy-slug: ${{ vars.SIGNPATH_SIGNING_POLICY_SLUG }}
+          github-artifact-id: ${{ needs.build.outputs.unsigned-artifact-id }}
+          wait-for-completion: true
+          wait-for-completion-timeout-in-seconds: 3600
+          output-artifact-directory: signed
+      - name: Verify signed DLL
+        shell: pwsh
+        env:
+          EXPECTED_THUMBPRINT: ${{ vars.SIGNPATH_CERTIFICATE_THUMBPRINT }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $signature = Get-AuthenticodeSignature -LiteralPath signed/dinput8.dll
+          if ($signature.Status -ne 'Valid' -or
+              -not $signature.TimeStamperCertificate -or
+              $signature.SignerCertificate.Thumbprint -ne $env:EXPECTED_THUMBPRINT) {
+            throw 'Trusted, timestamped signature from the expected signer was not verified.'
+          }
+          $version = (Get-Item signed/dinput8.dll).VersionInfo
+          if ($version.CompanyName -ne 'MR_Scarface' -or
+              $version.ProductName -ne 'MR_ScarfaceVR for FS25' -or $version.ProductVersion -ne '0.1.0.1' -or
+              $version.FileVersion -ne '0.1.0.1' -or $version.OriginalFilename -ne 'dinput8.dll') {
+            throw 'Signed DLL metadata does not match the approved artifact.'
+          }
+          $hash = (Get-FileHash signed/dinput8.dll -Algorithm SHA256).Hash
+          "$hash  dinput8.dll" | Set-Content signed/SHA256SUMS.txt -Encoding ascii
+      - name: Upload verified signed DLL
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: mr-scarfacevr-native-signed
+          path: signed/*
+          if-no-files-found: error
+          retention-days: 14

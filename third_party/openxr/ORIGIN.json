@@ -1,0 +1,24 @@
+{
+  "repository": "KhronosGroup/OpenXR-SDK",
+  "tag": "release-1.0.34",
+  "commit": "288d3a7ebc1ad959f62d51da75baa3d27438c499",
+  "purpose": "Official API interface headers only; no VR mod implementation",
+  "files": [
+    {
+      "Path": "include/openxr/openxr_loader_negotiation.h",
+      "Hash": "2718BDB6868023F0FC74307E94DEED1C756E070701F276C2ED5837B384EA8924"
+    },
+    {
+      "Path": "include/openxr/openxr_platform_defines.h",
+      "Hash": "47738E2088A63051AB586FD44DA1E0C556AA6F78CCC841BB5EEB29B13E3704C3"
+    },
+    {
+      "Path": "include/openxr/openxr_platform.h",
+      "Hash": "D6749812D1C6FDED6C4C8756E95ACCFF90F04CC20415E46FA381DA52FF493B14"
+    },
+    {
+      "Path": "include/openxr/openxr.h",
+      "Hash": "F7D670C13053CFA503512213820184D0986C5B9DE173D1C16F0753ACEC267F07"
+    }
+  ]
+}

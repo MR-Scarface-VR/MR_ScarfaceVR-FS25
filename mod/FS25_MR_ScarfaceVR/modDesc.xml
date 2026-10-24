@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<modDesc descVersion="115">
+    <author>MR_Scarface</author>
+    <version>0.1.0.1</version>
+    <title><en>MR_ScarfaceVR Experimental</en><de>MR_ScarfaceVR Experimentell</de></title>
+    <description>
+        <en>Experimental Quest Link VR adapter by MR_Scarface for FS25 1.25.0.0.</en>
+        <de>Experimentelle Quest-Link-VR-Anbindung von MR_Scarface für FS25 1.25.0.0.</de>
+    </description>
+    <multiplayer supported="false"/>
+    <extraSourceFiles><sourceFile filename="VR.lua"/></extraSourceFiles>
+</modDesc>
