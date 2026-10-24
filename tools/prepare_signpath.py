@@ -6,9 +6,11 @@ import zipfile
 
 
 PUBLIC_FILES = (
-    '.gitignore', 'LICENSE', 'README.md', 'INSTALLATION.md', 'THIRD_PARTY.md', 'PRIVACY.md',
+    '.gitignore', 'LICENSE', 'README.md', 'README.de.md', 'TESTING.md',
+    'INSTALLATION.md', 'THIRD_PARTY.md', 'PRIVACY.md',
     'CODE_SIGNING_POLICY.md', 'build.ps1',
     '.github/workflows/build-and-sign.yml',
+    '.github/ISSUE_TEMPLATE/test_report.md',
     'signing/artifact-configuration.xml', 'signing/SETUP.md', 'signing/APPLICATION_DRAFT.md',
     'native/proxy.cpp', 'native/dinput8.def', 'native/version.rc',
     'native/engine_probe.cpp', 'native/engine_probe.h', 'native/engine_addresses.h',
