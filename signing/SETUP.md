@@ -3,6 +3,11 @@
 Stand: 24.10.2026. Noch kein Antrag, keine Aufnahme und keine Signatur.
 Dieses Paket ist für die Einrichtung gedacht, nicht zum Installieren im Spiel.
 
+GitHub-Konto und öffentliches Repository sind inzwischen eingerichtet:
+[MR-Scarface-VR/MR_ScarfaceVR-FS25](https://github.com/MR-Scarface-VR/MR_ScarfaceVR-FS25).
+Der [erste gehostete Build](https://github.com/MR-Scarface-VR/MR_ScarfaceVR-FS25/actions/runs/40115334964)
+war erfolgreich. Ein SignPath-Antrag wurde noch nicht abgesendet.
+
 ## Bereits lokal vorbereitet
 
 - Eigene Quellen unter MIT; OpenXR-Lizenzen separat erhalten.
@@ -116,6 +121,6 @@ Ein Zertifikatswechsel erfordert die bewusste Anpassung des Fingerabdrucks.
 - [Metadaten-Einschränkungen](https://docs.signpath.io/artifact-configuration/reference#file-metadata-restrictions)
 
 Die drei Workflow-Actions sind auf am 24.10.2026 über GitHubs öffentliche API
-aufgelöste Commits der Tags checkout v4, upload-artifact v7 und SignPath v3
+aufgelöste Commits der Tags checkout v7.0.1, upload-artifact v7 und SignPath v3
 festgelegt. Künftige Updates bewusst prüfen. Der echte Cloud-Ablauf lässt sich
 ohne GitHub-Repository und SignPath-Freischaltung noch nicht ausführen.

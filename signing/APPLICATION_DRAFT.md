@@ -12,7 +12,7 @@ that planned account security, public releases or CI runs already exist.
 - Repository: https://github.com/MR-Scarface-VR/MR_ScarfaceVR-FS25
 - Homepage: https://github.com/MR-Scarface-VR/MR_ScarfaceVR-FS25#readme
 - Release page: https://github.com/MR-Scarface-VR/MR_ScarfaceVR-FS25/releases
-- Public successful workflow run: [URL AFTER FIRST SUCCESSFUL BUILD]
+- Public successful workflow run: https://github.com/MR-Scarface-VR/MR_ScarfaceVR-FS25/actions/runs/40115334964
 - License: MIT for our own code; official Khronos OpenXR headers retain MIT notices.
 - Maintainers / reviewers / signing approvers: MR_Scarface (@MR-Scarface-VR), initial single-maintainer project
 - MFA enabled for all relevant accounts: [CONFIRM AFTER CONFIGURING]
@@ -32,7 +32,8 @@ normal keyboard/mouse, gamepad or wheel controls. It is a single-player mod.
 The exact supported game is FS25 1.25.0.0. An initial Quest 2 user has confirmed
 walking, vehicle-cab play, head rotation/translation, recentering and menu changes.
 There is not yet an established public user community or independent multi-PC
-test history. Public release/repository status: [UPDATE TRUTHFULLY].
+test history. The source repository and first successful hosted build are public;
+a packaged public release has not yet been published.
 
 The project was developed with AI assistance. The maintainer is responsible for
 review, maintenance and release approval; AI assistance is not independent review.
