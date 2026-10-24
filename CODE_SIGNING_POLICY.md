@@ -1,7 +1,8 @@
 # Code signing policy
 
-Status: application preparation only. SignPath Foundation has not accepted this
-project, no signing service is configured, and current pilot DLLs are unsigned.
+Status: application submitted on 24 October 2026; website submission confirmed.
+A decision is pending. SignPath Foundation has not accepted this project, no
+signing service is configured, and current pilot DLLs are unsigned.
 
 ## Intended process
 

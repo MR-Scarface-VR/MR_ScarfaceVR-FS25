@@ -1,7 +1,9 @@
-# SignPath Foundation application draft — NOT SUBMITTED
+# SignPath Foundation application reference
 
-Replace all remaining bracketed fields before submitting. Do not claim
-that planned account security, public releases or CI runs already exist.
+Application submitted through the official form on 24 October 2026. The website
+confirmed "Form submitted" / "Thank you, we'll be in touch soon." A decision is
+pending. This document contains public project reference answers, not the private
+contact details entered in the form. It is not evidence of acceptance.
 
 ## Applicant details
 

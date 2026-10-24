@@ -22,8 +22,9 @@ GIANTS oder Meta wird behauptet. Eigene Quellen: [MIT-Lizenz](LICENSE).
 
 ## Code signing policy
 
-Derzeit sind die Pilot-Builds **unsigniert**. Die Bewerbung bei SignPath wird
-vorbereitet; eine Aufnahme oder Signatur ist noch nicht erfolgt.
+Derzeit sind die Pilot-Builds **unsigniert**. Der Antrag bei SignPath wurde am
+24.10.2026 eingereicht; die Website bestätigte den Versand. Eine Aufnahme oder
+Signatur ist noch nicht erfolgt.
 [Code signing policy](CODE_SIGNING_POLICY.md) und [SignPath-Einrichtung](signing/SETUP.md).
 
 **Vorheriger Funktionsstand 0.1.0.0: kurzer Praxistest bestanden.** Am 24.10.2026

@@ -1,12 +1,16 @@
 # SignPath vorbereiten und beantragen
 
-Stand: 24.10.2026. Noch kein Antrag, keine Aufnahme und keine Signatur.
+Stand: 24.10.2026. Antrag eingereicht und Versand auf der Website bestätigt.
+Entscheidung ausstehend; noch keine Aufnahme und keine Signatur.
 Dieses Paket ist für die Einrichtung gedacht, nicht zum Installieren im Spiel.
 
 GitHub-Konto und öffentliches Repository sind inzwischen eingerichtet:
 [MR-Scarface-VR/MR_ScarfaceVR-FS25](https://github.com/MR-Scarface-VR/MR_ScarfaceVR-FS25).
 Der [erste gehostete Build](https://github.com/MR-Scarface-VR/MR_ScarfaceVR-FS25/actions/runs/40115334964)
-war erfolgreich. Ein SignPath-Antrag wurde noch nicht abgesendet.
+war erfolgreich. Die öffentliche Testversion ist als
+[v0.1.0.1-experimental](https://github.com/MR-Scarface-VR/MR_ScarfaceVR-FS25/releases/tag/v0.1.0.1-experimental)
+veröffentlicht. Der Nutzer hat den SignPath-Antrag selbst abgesendet; die Website
+zeigte die Versandbestätigung. Weitere Einrichtung erst nach Rückmeldung.
 
 ## Bereits lokal vorbereitet
 
