@@ -1,7 +1,22 @@
 # MR_ScarfaceVR: test guide / Testablauf
 
 [Report a test / Testergebnis melden](https://github.com/MR-Scarface-VR/MR_ScarfaceVR-FS25/issues/new?template=test_report.md)
-· [Download 0.1.0.3](https://github.com/MR-Scarface-VR/MR_ScarfaceVR-FS25/releases/tag/v0.1.0.3-experimental)
+· [Download 0.1.0.4](https://github.com/MR-Scarface-VR/MR_ScarfaceVR-FS25/releases/tag/v0.1.0.4-experimental)
+
+## ReShade comparison / ReShade-Vergleich
+
+Version 0.1.0.4: one Quest 2 / Meta Link user confirmed the selected effect in
+both eyes and correct tracking on 25 October 2026, using ReShade 6.8.0.2155.
+Report the exact effect/preset and ReShade version. Check in the stereo world
+on foot/in a cab, not the flat menu. Other shader packs report errors; depth
+effects and other PCs remain unconfirmed.
+
+Version 0.1.0.4: ein Nutzer bestätigte den gewählten Effekt in beiden Augen und
+korrektes Tracking mit Quest 2 / Meta Link am 25.10.2026 (ReShade 6.8.0.2155).
+Bitte Effekt/Preset und ReShade-Version genau nennen. In der räumlichen Welt
+zu Fuß/in der Kabine prüfen, nicht im flachen Menü. Andere Shader melden Fehler;
+Tiefen-Effekte und andere PCs bleiben ungeprüft.
+[Details](docs/RESHade_TEST_0.1.0.4.md).
 
 ## Terrain comparison / Gelände-Vergleich
 
@@ -30,7 +45,7 @@ Verbleibende Unterschiede bitte melden.
 
 **First check:** Windows/D3D12, exactly FS25 **1.25.0.0**, Quest 2 connected through
 Meta Quest Link. The current DLL rejects other game builds. Other headsets are
-unverified. Version 0.1.0.3 is experimental and unsigned; do not disable Windows
+unverified. Version 0.1.0.4 is experimental and unsigned; do not disable Windows
 security protections to run it. Follow [installation](README.md#install-and-play)
 and start with a backed-up save or a separate test save.
 
@@ -70,7 +85,7 @@ There is no automatic upload or telemetry in the adapter.
 
 **Zuerst prüfen:** Windows/D3D12, exakt FS25 **1.25.0.0**, Quest 2 über Meta Quest
 Link verbunden. Andere Spielversionen werden abgelehnt, andere Headsets sind
-ungeprüft. Version 0.1.0.3 ist experimentell und unsigniert. Windows-Schutzfunktionen
+ungeprüft. Version 0.1.0.4 ist experimentell und unsigniert. Windows-Schutzfunktionen
 für den Test nicht abschalten. Nach der [Installationsanleitung](INSTALLATION.md)
 vorgehen und einen gesicherten oder eigenen Testspielstand verwenden.
 

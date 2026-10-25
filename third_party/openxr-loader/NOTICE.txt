@@ -1,0 +1,9 @@
+Official unmodified Khronos OpenXR loader, release-1.1.65.
+Copyright (c) 2017-2026 The Khronos Group Inc.
+https://github.com/KhronosGroup/OpenXR-SDK/tree/release-1.1.65
+
+Loader source and generated API code: Apache-2.0 OR MIT.
+Distributed here under the MIT option; see LICENSE-MIT.txt.
+Bundled JsonCpp dependency: public domain / MIT; see LICENSE-jsoncpp.txt.
+Original copyright and license notices remain applicable.
+ReShade is not included in this package.

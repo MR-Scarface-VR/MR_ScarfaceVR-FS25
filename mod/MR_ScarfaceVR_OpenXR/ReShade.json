@@ -1,0 +1,10 @@
+{
+  "file_format_version": "1.0.0",
+  "api_layer": {
+    "name": "XR_APILAYER_reshade",
+    "library_path": "..\\dxgi.dll",
+    "api_version": "1.0",
+    "implementation_version": "2",
+    "description": "Optional FS25-local ReShade OpenXR layer; uses the player's installed ReShade dxgi.dll"
+  }
+}

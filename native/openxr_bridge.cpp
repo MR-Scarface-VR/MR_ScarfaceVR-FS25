@@ -1,6 +1,5 @@
 #include "openxr_bridge.h"
 #include "d3d12_copy.h"
-#include "../third_party/openxr/include/openxr/openxr_loader_negotiation.h"
 #include <wrl/client.h>
 #include <array>
 #include <cstdio>
@@ -133,51 +132,27 @@ template<class T> bool function(const char* name, T& output) {
     return check(getProc(instance, name, reinterpret_cast<PFN_xrVoidFunction*>(&output)), name) && output;
 }
 
-bool open_runtime() {
-    wchar_t manifest[32768];
-    DWORD bytes = sizeof(manifest);
-    const auto status = RegGetValueW(HKEY_LOCAL_MACHINE, L"SOFTWARE\\Khronos\\OpenXR\\1",
-        L"ActiveRuntime", RRF_RT_REG_SZ | RRF_SUBKEY_WOW6464KEY, nullptr, manifest, &bytes);
-    if (status != ERROR_SUCCESS || bytes < sizeof(wchar_t) || bytes > sizeof(manifest)) {
-        if (record) record("OpenXR inactive: no 64-bit active runtime registered.");
-        return false;
+struct ScopedApiLayerPath {
+    std::wstring previous;
+    bool existed = false, ready = false;
+    explicit ScopedApiLayerPath(const std::wstring& directory) {
+        SetLastError(ERROR_SUCCESS);
+        const DWORD length = GetEnvironmentVariableW(L"XR_API_LAYER_PATH", nullptr, 0);
+        existed = length != 0 || GetLastError() != ERROR_ENVVAR_NOT_FOUND;
+        if (length) {
+            std::vector<wchar_t> value(length);
+            if (GetEnvironmentVariableW(L"XR_API_LAYER_PATH", value.data(), length) != length - 1) return;
+            previous = value.data();
+        }
+        const auto combined = previous.empty() ? directory : previous + L";" + directory;
+        ready = SetEnvironmentVariableW(L"XR_API_LAYER_PATH", combined.c_str()) != FALSE;
     }
-    manifest[_countof(manifest)-1] = 0;
-    std::wstring path = manifest;
-    const auto slash = path.find_last_of(L"\\/");
-    if (slash == std::wstring::npos || path.size() < 3 || path[1] != L':' ||
-        _wcsicmp(path.c_str() + slash + 1, L"oculus_openxr_64.json") != 0) {
-        if (record) record("OpenXR inactive: this build requires the registered Meta Link runtime.");
-        return false;
+    ~ScopedApiLayerPath() {
+        if (ready) SetEnvironmentVariableW(L"XR_API_LAYER_PATH", existed ? previous.c_str() : nullptr);
     }
-    // shortcut: Meta's installed runtime is negotiated directly; add a loader for other runtimes.
-    path.resize(slash + 1);
-    path += L"LibOVRRTImpl64_1.dll";
-    runtime = LoadLibraryExW(path.c_str(), nullptr,
-        LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR | LOAD_LIBRARY_SEARCH_SYSTEM32);
-    if (!runtime) {
-        if (record) record("OpenXR inactive: installed Meta runtime could not be loaded.");
-        return false;
-    }
-    auto negotiate = reinterpret_cast<PFN_xrNegotiateLoaderRuntimeInterface>(
-        GetProcAddress(runtime, "xrNegotiateLoaderRuntimeInterface"));
-    XrNegotiateLoaderInfo loader{};
-    loader.structType = XR_LOADER_INTERFACE_STRUCT_LOADER_INFO;
-    loader.structVersion = XR_LOADER_INFO_STRUCT_VERSION;
-    loader.structSize = sizeof(loader);
-    loader.minInterfaceVersion = loader.maxInterfaceVersion = 1;
-    loader.minApiVersion = XR_MAKE_VERSION(1, 0, 0);
-    // Negotiation admits newer 1.x runtimes; the instance still requests only API 1.0.34.
-    loader.maxApiVersion = XR_MAKE_VERSION(1, 0x3ff, 0xfff);
-    XrNegotiateRuntimeRequest request{};
-    request.structType = XR_LOADER_INTERFACE_STRUCT_RUNTIME_REQUEST;
-    request.structVersion = XR_RUNTIME_INFO_STRUCT_VERSION;
-    request.structSize = sizeof(request);
-    if (!negotiate || !check(negotiate(&loader, &request), "negotiate") ||
-        request.runtimeInterfaceVersion != 1 || !request.getInstanceProcAddr ||
-        request.runtimeApiVersion < loader.minApiVersion ||
-        XR_VERSION_MAJOR(request.runtimeApiVersion) != 1) return false;
-    getProc = request.getInstanceProcAddr;
+};
+
+bool create_loader_instance(bool reshade) {
     PFN_xrEnumerateInstanceExtensionProperties enumerate = nullptr;
     PFN_xrCreateInstance create = nullptr;
     if (!function("xrEnumerateInstanceExtensionProperties", enumerate) ||
@@ -199,12 +174,71 @@ bool open_runtime() {
     info.applicationInfo.apiVersion = XR_MAKE_VERSION(1, 0, 34);
     info.enabledExtensionCount = 1;
     info.enabledExtensionNames = &extension;
+    const char* layer = "XR_APILAYER_reshade";
+    if (reshade) {
+        PFN_xrEnumerateApiLayerProperties enumerateLayers = nullptr;
+        if (!function("xrEnumerateApiLayerProperties", enumerateLayers) ||
+            !check(enumerateLayers(0, &count, nullptr), "enumerate layers") || count > 4096) return false;
+        std::vector<XrApiLayerProperties> layers(count, {XR_TYPE_API_LAYER_PROPERTIES});
+        if (!check(enumerateLayers(count, &count, layers.data()), "enumerate layers")) return false;
+        bool found = false;
+        for (const auto& available : layers) if (std::strcmp(available.layerName, layer) == 0) found = true;
+        if (!found) {
+            if (record) record("OpenXR inactive: ReShade detected but XR_APILAYER_reshade is unavailable; check the local layer manifest.");
+            return false;
+        }
+        info.enabledApiLayerCount = 1;
+        info.enabledApiLayerNames = &layer;
+    }
     if (!check(create(&info, &instance), "create instance")) return false;
 #define LOAD_XR(name) if (!function("xr" #name, api##name)) return false;
     XR_FUNCTIONS(LOAD_XR)
 #undef LOAD_XR
-    if (record) record("MR_ScarfaceVR OpenXR instance created through the installed Meta runtime; D3D12 extension available.");
+    if (record) record(reshade ?
+        "MR_ScarfaceVR OpenXR instance created through Khronos loader with XR_APILAYER_reshade requested; verify ReShade session/effect logs and headset output." :
+        "MR_ScarfaceVR OpenXR instance created through Khronos loader without local ReShade; D3D12 extension available.");
     return true;
+}
+
+bool open_runtime() {
+    wchar_t manifest[32768];
+    DWORD bytes = sizeof(manifest);
+    if (RegGetValueW(HKEY_LOCAL_MACHINE, L"SOFTWARE\\Khronos\\OpenXR\\1", L"ActiveRuntime",
+        RRF_RT_REG_SZ | RRF_SUBKEY_WOW6464KEY, nullptr, manifest, &bytes) != ERROR_SUCCESS ||
+        bytes < sizeof(wchar_t) || bytes > sizeof(manifest)) {
+        if (record) record("OpenXR inactive: no 64-bit active runtime registered.");
+        return false;
+    }
+    manifest[_countof(manifest)-1] = 0;
+    const std::wstring runtimePath = manifest;
+    const auto name = runtimePath.find_last_of(L"\\/");
+    if (name == std::wstring::npos || _wcsicmp(runtimePath.c_str() + name + 1, L"oculus_openxr_64.json") != 0) {
+        if (record) record("OpenXR inactive: this build remains restricted to the registered Meta Link runtime.");
+        return false;
+    }
+    HMODULE self = nullptr;
+    wchar_t ownPath[32768];
+    if (!GetModuleHandleExW(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
+        reinterpret_cast<LPCWSTR>(&open_runtime), &self)) return false;
+    const DWORD length = GetModuleFileNameW(self, ownPath, _countof(ownPath));
+    if (!length || length >= _countof(ownPath)) return false;
+    std::wstring directory = ownPath;
+    const auto slash = directory.find_last_of(L"\\/");
+    if (slash == std::wstring::npos) return false;
+    directory.resize(slash + 1);
+    runtime = LoadLibraryExW((directory + L"openxr_loader.dll").c_str(), nullptr,
+        LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR | LOAD_LIBRARY_SEARCH_SYSTEM32);
+    if (!runtime) {
+        if (record) record("OpenXR inactive: place the packaged Khronos openxr_loader.dll beside dinput8.dll.");
+        return false;
+    }
+    getProc = reinterpret_cast<PFN_xrGetInstanceProcAddr>(GetProcAddress(runtime, "xrGetInstanceProcAddr"));
+    if (!getProc) return false;
+    const auto reshade = GetModuleHandleW((directory + L"dxgi.dll").c_str());
+    if (!reshade || !GetProcAddress(reshade, "xrNegotiateLoaderApiLayerInterface")) return create_loader_instance(false);
+    ScopedApiLayerPath layerPath(directory + L"MR_ScarfaceVR_OpenXR");
+    if (!layerPath.ready) return false;
+    return create_loader_instance(true);
 }
 
 Pose pose(XrPosef value) {

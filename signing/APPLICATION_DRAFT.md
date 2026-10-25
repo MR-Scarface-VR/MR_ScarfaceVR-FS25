@@ -93,3 +93,13 @@ dual-licensing. Please advise if further information about this model is needed.
 - Actual maintainer roles, MFA status and available public test reports.
 
 Application entry point: https://signpath.org/apply.html
+
+## Project update after submission — 25 October 2026
+
+Version 0.1.0.4 uses the unmodified official Khronos OpenXR loader (MIT option,
+notices included) instead of directly negotiating Meta's runtime. Optional
+ReShade integration requests the player's already-installed dxgi.dll as a local
+OpenXR API layer; no ReShade binary is distributed and no global layer is
+registered. One Quest 2 / Meta Link user confirmed the chosen effect in both
+eyes and correct tracking. Other shaders/PCs are unverified. This is a project
+reference update, not evidence of a new application or signing approval.

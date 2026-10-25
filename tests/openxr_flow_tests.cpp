@@ -3,6 +3,42 @@
 #include <cassert>
 
 namespace {
+unsigned loaderCreates = 0;
+bool expectReShadeLayer = false;
+bool advertiseReShade = true, advertiseD3D12 = true;
+XrResult createResult = XR_SUCCESS;
+XrResult XRAPI_CALL loader_extensions(const char*, uint32_t capacity, uint32_t* count, XrExtensionProperties* out) {
+    *count = advertiseD3D12 ? 1u : 0u;
+    if (capacity) strcpy_s(out[0].extensionName, XR_KHR_D3D12_ENABLE_EXTENSION_NAME);
+    return XR_SUCCESS;
+}
+XrResult XRAPI_CALL loader_layers(uint32_t capacity, uint32_t* count, XrApiLayerProperties* out) {
+    *count = advertiseReShade ? 1u : 0u;
+    if (capacity) strcpy_s(out[0].layerName, "XR_APILAYER_reshade");
+    return XR_SUCCESS;
+}
+XrResult XRAPI_CALL loader_create(const XrInstanceCreateInfo* info, XrInstance* out) {
+    ++loaderCreates;
+    assert(info->applicationInfo.apiVersion == XR_MAKE_VERSION(1, 0, 34));
+    assert(info->enabledExtensionCount == 1);
+    assert(info->enabledApiLayerCount == (expectReShadeLayer ? 1u : 0u));
+    if (expectReShadeLayer) assert(strcmp(info->enabledApiLayerNames[0], "XR_APILAYER_reshade") == 0);
+    if (XR_SUCCEEDED(createResult)) *out = reinterpret_cast<XrInstance>(static_cast<uintptr_t>(42));
+    return createResult;
+}
+XrResult XRAPI_CALL loader_noop() { return XR_SUCCESS; }
+XrResult XRAPI_CALL loader_get(XrInstance current, const char* name, PFN_xrVoidFunction* out) {
+    if (strcmp(name, "xrEnumerateInstanceExtensionProperties") == 0) {
+        assert(current == XR_NULL_HANDLE); *out = reinterpret_cast<PFN_xrVoidFunction>(loader_extensions);
+    } else if (strcmp(name, "xrEnumerateApiLayerProperties") == 0) {
+        assert(current == XR_NULL_HANDLE); *out = reinterpret_cast<PFN_xrVoidFunction>(loader_layers);
+    } else if (strcmp(name, "xrCreateInstance") == 0) {
+        assert(current == XR_NULL_HANDLE); *out = reinterpret_cast<PFN_xrVoidFunction>(loader_create);
+    } else {
+        assert(current != XR_NULL_HANDLE); *out = reinterpret_cast<PFN_xrVoidFunction>(loader_noop);
+    }
+    return XR_SUCCESS;
+}
 unsigned releases = 0, waits = 0, ends = 0;
 uint32_t submittedLayers = 0;
 XrStructureType submittedType = XR_TYPE_UNKNOWN;
@@ -43,6 +79,39 @@ void setup(bool world, bool leftCopied, bool rightCopied) {
 }
 }
 int main() {
+    getProc = loader_get;
+    assert(create_loader_instance(false) && loaderCreates == 1);
+    instance = XR_NULL_HANDLE;
+    expectReShadeLayer = true;
+    assert(create_loader_instance(true) && loaderCreates == 2);
+    instance = XR_NULL_HANDLE;
+    createResult = XR_ERROR_INITIALIZATION_FAILED;
+    assert(!create_loader_instance(true) && instance == XR_NULL_HANDLE);
+    createResult = XR_SUCCESS;
+    advertiseReShade = false;
+    assert(!create_loader_instance(true) && loaderCreates == 3 && instance == XR_NULL_HANDLE);
+    advertiseReShade = true;
+    advertiseD3D12 = false;
+    assert(!create_loader_instance(false) && loaderCreates == 3 && instance == XR_NULL_HANDLE);
+    advertiseD3D12 = true;
+    SetEnvironmentVariableW(L"XR_API_LAYER_PATH", L"existing-layer-directory");
+    {
+        ScopedApiLayerPath path(L"C:\\OwnVR test\\layers");
+        assert(path.ready);
+        wchar_t value[512];
+        GetEnvironmentVariableW(L"XR_API_LAYER_PATH", value, 512);
+        assert(wcscmp(value, L"existing-layer-directory;C:\\OwnVR test\\layers") == 0);
+    }
+    wchar_t restored[512];
+    GetEnvironmentVariableW(L"XR_API_LAYER_PATH", restored, 512);
+    assert(wcscmp(restored, L"existing-layer-directory") == 0);
+    SetEnvironmentVariableW(L"XR_API_LAYER_PATH", nullptr);
+    { ScopedApiLayerPath path(L"C:\\OwnVR test\\layers"); assert(path.ready); }
+    assert(GetEnvironmentVariableW(L"XR_API_LAYER_PATH", restored, 512) == 0);
+    getProc = nullptr;
+#define RESET_XR(name) api##name = nullptr;
+    XR_FUNCTIONS(RESET_XR)
+#undef RESET_XR
     setup(true, true, true);
     vr_finish_frame();
     assert(releases == 2 && ends == 1 && submittedLayers == 1);
@@ -96,5 +165,5 @@ int main() {
     assert(submittedLayers == 0 && releases == 2);
     assert(!vr_begin_frame(nullptr, true));
     assert(!session && !stopRequested);
-    std::puts("PASS: XR stereo/quad submission, incomplete-eye rejection, wait-timeout ownership and frame pairing");
+    std::puts("PASS: loader dispatch/optional ReShade/failure paths/environment restore; XR stereo/quad submission, incomplete-eye rejection, ownership and frame pairing");
 }

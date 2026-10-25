@@ -3,6 +3,11 @@
 **Play Farming Simulator 25 in VR with stereo rendering and head tracking.**
 A free, unofficial, experimental **Mod for Farming Simulator**, maintained by **MR_Scarface**.
 
+**Version 0.1.0.4 adds optional ReShade support in VR.** On 25 October 2026
+one Quest 2 / Meta Link user confirmed the selected effect in both eyes and
+correct head tracking. ReShade 6.8.0.2155 was used; other shaders and PCs remain
+unverified. Some installed shader packs report sampler-descriptor errors. [Test scope](docs/RESHade_TEST_0.1.0.4.md).
+
 **Version 0.1.0.3 — terrain fix:** terrain virtual-texture detail follows VR head
 tracking. One user confirmed the terrain comparison on Quest 2 / Meta Link on
 25 October 2026; live logs confirm tracking reached the terrain worker. Automated
@@ -10,7 +15,7 @@ checks pass. Broader regression testing and other PCs/headsets remain unverified
 In 0.1.0.1, terrain could stay blurry outside the mouse-camera direction.
 Version 0.1.0.3 supplies headset tracking to the terrain worker. See the [terrain comparison test](TESTING.md#terrain-comparison--gelände-vergleich).
 
-[**Download the test package**](https://github.com/MR-Scarface-VR/MR_ScarfaceVR-FS25/releases/tag/v0.1.0.3-experimental) ·
+[**Download the test package**](https://github.com/MR-Scarface-VR/MR_ScarfaceVR-FS25/releases/tag/v0.1.0.4-experimental) ·
 [**Report a test or problem**](https://github.com/MR-Scarface-VR/MR_ScarfaceVR-FS25/issues/new?template=test_report.md) ·
 [**Deutsch**](README.de.md)
 
@@ -22,7 +27,7 @@ using the [test report](https://github.com/MR-Scarface-VR/MR_ScarfaceVR-FS25/iss
 The [short test guide](TESTING.md#english) covers menus, walking, vehicle cabs,
 head movement, normal controls and recentering. No automatic telemetry.
 
-**Version 0.1.0.3 is unsigned and experimental.** The earlier 0.1.0.1 passed
+**Version 0.1.0.4 is unsigned and experimental.** The earlier 0.1.0.1 passed
 a short check of the functions below on one PC on 24 October 2026. The 0.1.0.3
 headset test specifically confirmed the terrain fix on the same setup. Other PCs/headsets and longer sessions remain
 unverified. This is not a claim of general compatibility.
@@ -41,7 +46,7 @@ unverified. This is not a claim of general compatibility.
 | Game | **FS25 1.25.0.0**, exact supported executable; other builds are rejected |
 | PC | Windows x64, Direct3D 12 |
 | Headset/runtime | **Quest 2 connected through Meta Quest Link** |
-| Installation | Own DLL beside the game executable **and** a ZIP in the mods folder |
+| Installation | Own DLL, bundled OpenXR loader and layer folder beside the game executable **and** a ZIP in the mods folder |
 
 Meta Quest Link must be installed separately and working. No SteamVR or existing
 VR mod is required for this setup. Quest standalone, consoles and other runtimes
@@ -49,11 +54,13 @@ are not confirmed. Use your own legitimate game installation; no game files are 
 
 ## Install and play
 
-1. Close FS25. Download `MR_ScarfaceVR_FS25_v0.1.0.3_Experimental.zip` from the
-   [release page](https://github.com/MR-Scarface-VR/MR_ScarfaceVR-FS25/releases/tag/v0.1.0.3-experimental)
+1. Close FS25. Download `MR_ScarfaceVR_FS25_v0.1.0.4_Experimental.zip` from the
+   [release page](https://github.com/MR-Scarface-VR/MR_ScarfaceVR-FS25/releases/tag/v0.1.0.4-experimental)
    and extract the outer package. Read its `START_HIER.txt`.
-2. Copy `x64/dinput8.dll` beside `x64/FarmingSimulator2025Game.exe` in the game
-   installation. **Do not overwrite a DLL belonging to another mod.**
+2. Copy `x64/dinput8.dll`, `x64/openxr_loader.dll` and the
+   `x64/MR_ScarfaceVR_OpenXR/` folder beside `x64/FarmingSimulator2025Game.exe`.
+   **Do not overwrite files belonging to another mod.** When upgrading, update
+   both DLLs, the layer folder and the Lua ZIP below.
 3. Copy `mods/FS25_MR_ScarfaceVR.zip`, still zipped, into your personal FS25
    `mods` folder, normally `Documents/My Games/FarmingSimulator2025/mods/`.
    When upgrading from our old pilot, remove or disable `FS25_OwnVR.zip`;
@@ -75,10 +82,24 @@ remove the headset and exit FS25 normally. Session loss can require restarting t
 For the full German instructions see [Installation und Bedienung](INSTALLATION.md).
 For a practical checklist in either language see [TESTING.md](TESTING.md).
 
+## Optional ReShade
+
+ReShade is separately installed by the player and is not bundled. The tested
+installation uses its `dxgi.dll` beside the game executable. Keep that DLL, its
+shaders and presets; do not replace our `dinput8.dll` with ReShade. No global
+ReShade OpenXR-layer installation is needed for our local integration.
+
+Effects apply to the stereo world on foot/in cabs; flat menus are not processed
+through this path. ReShade keeps VR settings in `ReShadeVR.ini`; select the
+desired preset there if it differs from the desktop preset. Start with a simple
+color effect and check both eyes. Depth effects and arbitrary screen-space
+shaders are not generally confirmed. [Detailed test notes](docs/RESHade_TEST_0.1.0.4.md).
+
 ## Remove
 
-Close FS25 and remove only this project's installed `x64/dinput8.dll` and
-`mods/FS25_MR_ScarfaceVR.zip`. Do not remove original game files or another mod's DLL.
+Close FS25 and remove only this project's installed `x64/dinput8.dll`,
+`x64/openxr_loader.dll`, `x64/MR_ScarfaceVR_OpenXR/` folder and
+`mods/FS25_MR_ScarfaceVR.zip`. Keep the separately installed ReShade files. Do not remove original game files or another mod's DLL.
 The adapter does not patch the game executable on disk. Optional local diagnostics
 are `fs25-mr_scarfacevr.log` and `fs25-mr_scarfacevr-eye.bmp` in the game `x64` folder.
 
@@ -102,7 +123,9 @@ and SHA256 checksums. Release assets are not silently replaced. The distributed 
 preserved. Source builds and automated checks also run
 [on GitHub Actions](https://github.com/MR-Scarface-VR/MR_ScarfaceVR-FS25/actions).
 
-Build with an existing MSVC x64/Windows SDK, PowerShell and Python:
+Build with an existing MSVC x64/Windows SDK, PowerShell and Python. The build
+fetches a pinned official Khronos loader package and verifies its checksums;
+this requires network access on the first build:
 
 ```powershell
 ./build.ps1

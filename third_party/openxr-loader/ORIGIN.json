@@ -1,0 +1,11 @@
+{
+  "repository": "https://github.com/KhronosGroup/OpenXR-SDK",
+  "tag": "release-1.1.65",
+  "commit": "24a1f2b92d212501a2b1b8d30ffd53abf55fcfa8",
+  "downloadUrl": "https://github.com/KhronosGroup/OpenXR-SDK/releases/download/release-1.1.65/OpenXR.Loader.1.1.65.nupkg",
+  "packageSha256": "05638c526f07ba3a5f1084bbc3308d654d5167f844ffa1e35515325cb72e0c34",
+  "dllSha256": "b0d0eed4e2b6aeb3ce529d82daf3daa5db104857d65c872884b4661142366ce2",
+  "dllEntry": "native/x64/release/bin/openxr_loader.dll",
+  "license": "Apache-2.0 OR MIT; distributed under MIT with jsoncpp notices",
+  "purpose": "Official loader binary, unmodified. Not Meta software and not a third-party VR mod. Existing API headers remain release-1.0.34."
+}

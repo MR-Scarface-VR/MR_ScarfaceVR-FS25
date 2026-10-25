@@ -1,8 +1,8 @@
 #include <winver.h>
 
 1 VERSIONINFO
-FILEVERSION 0,1,0,3
-PRODUCTVERSION 0,1,0,3
+FILEVERSION 0,1,0,4
+PRODUCTVERSION 0,1,0,4
 FILEFLAGSMASK VS_FFI_FILEFLAGSMASK
 FILEFLAGS 0
 FILEOS VOS_NT_WINDOWS32
@@ -15,12 +15,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "MR_Scarface\0"
             VALUE "FileDescription", "Experimental VR adapter for Farming Simulator 25\0"
-            VALUE "FileVersion", "0.1.0.3\0"
+            VALUE "FileVersion", "0.1.0.4\0"
             VALUE "InternalName", "dinput8\0"
             VALUE "LegalCopyright", "Copyright (c) 2026 MR_Scarface\0"
             VALUE "OriginalFilename", "dinput8.dll\0"
             VALUE "ProductName", "MR_ScarfaceVR for FS25\0"
-            VALUE "ProductVersion", "0.1.0.3\0"
+            VALUE "ProductVersion", "0.1.0.4\0"
         END
     END
     BLOCK "VarFileInfo"

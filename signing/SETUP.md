@@ -8,8 +8,9 @@ GitHub-Konto und öffentliches Repository sind inzwischen eingerichtet:
 [MR-Scarface-VR/MR_ScarfaceVR-FS25](https://github.com/MR-Scarface-VR/MR_ScarfaceVR-FS25).
 Der [erste gehostete Build](https://github.com/MR-Scarface-VR/MR_ScarfaceVR-FS25/actions/runs/40115334964)
 war erfolgreich. Aktuelle unsignierte Testversion:
-[v0.1.0.3-experimental](https://github.com/MR-Scarface-VR/MR_ScarfaceVR-FS25/releases/tag/v0.1.0.3-experimental).
-Der gezielte Quest-2-Vergleich am 25.10.2026 bestätigte die Gelände-Korrektur;
+[v0.1.0.4-experimental](https://github.com/MR-Scarface-VR/MR_ScarfaceVR-FS25/releases/tag/v0.1.0.4-experimental).
+Die gezielten Quest-2-Vergleiche am 25.10.2026 bestätigten die Gelände-Korrektur
+und in 0.1.0.4 den gewählten ReShade-Effekt in beiden Augen bei korrektem Tracking;
 weitere PCs und vollständige Regressionstests bleiben offen. Der Nutzer hat den SignPath-Antrag selbst abgesendet; die Website
 zeigte die Versandbestätigung. Weitere Einrichtung erst nach Rückmeldung.
 

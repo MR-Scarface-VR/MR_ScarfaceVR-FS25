@@ -13,6 +13,20 @@ Their existing notices and [MIT license](third_party/openxr/LICENSE-MIT.txt)
 are preserved. [Provenance and checksums](third_party/openxr/ORIGIN.json).
 No third-party VR mod implementation is included.
 
+## Bundled OpenXR loader (0.1.0.4)
+
+Version 0.1.0.4 includes the unmodified official Khronos x64 `openxr_loader.dll`
+from OpenXR-SDK release-1.1.65. The build fetches the pinned official package and
+checks both package and DLL SHA256 values. See
+[provenance](third_party/openxr-loader/ORIGIN.json),
+[MIT license](third_party/openxr-loader/LICENSE-MIT.txt) and
+[jsoncpp license](third_party/openxr-loader/LICENSE-jsoncpp.txt).
+This is a bundled runtime library, not a separate program installation.
+
+ReShade remains optional, separately installed by the player and not redistributed.
+The local layer manifest refers to that existing `dxgi.dll`. No ReShade shaders,
+presets or binaries are included in our mod package. Its license remains separate.
+
 ## External software, not redistributed
 
 - Farming Simulator 25 is the proprietary host application, purchased separately.

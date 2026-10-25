@@ -13,6 +13,8 @@ $setupCommand = '"' + $vcVars + '" >nul && set'
 if ($LASTEXITCODE -ne 0) { throw 'Existing MSVC environment initialization failed.' }
 $buildDirectory = Join-Path $PSScriptRoot 'build'
 New-Item -ItemType Directory -Path $buildDirectory -Force | Out-Null
+& (Join-Path $PSScriptRoot 'tools/fetch_openxr_loader.ps1') -OutputDirectory $buildDirectory
+Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'mod/MR_ScarfaceVR_OpenXR') -Destination $buildDirectory -Recurse -Force
 Push-Location -LiteralPath $buildDirectory
 try {
     & cl.exe /nologo /std:c++20 /EHsc /W4 /WX /MT /O2 (Join-Path $PSScriptRoot 'tests\native_core_tests.cpp') /Fe:native_core_tests.exe

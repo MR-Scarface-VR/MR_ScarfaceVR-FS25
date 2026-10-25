@@ -2,6 +2,13 @@
 
 Von **MR_Scarface**. Inoffizieller experimenteller VR-Mod.
 
+**Version 0.1.0.4** ergänzt den offiziellen OpenXR-Loader und optionale
+ReShade-Anbindung. Am 25.10.2026 bestätigte ein Nutzer mit Quest 2 /
+Meta Link den gewählten Effekt in beiden Augen und korrektes Kopftracking.
+Getestet mit ReShade 6.8.0.2155; einzelne andere Shader melden noch Fehler.
+Keine allgemeine Shader-Kompatibilität bestätigt.
+[Testumfang](docs/RESHade_TEST_0.1.0.4.md).
+
 **Version 0.1.0.3 — Gelände-Korrektur:** Die Gelände-Texturen folgen jetzt dem
 VR-Kopftracking. Ein Nutzer bestätigte den Vergleich mit Quest 2 / Meta Link am
 25.10.2026; das Log bestätigt die Übergabe an den Gelände-Thread. Automatisierte
@@ -19,7 +26,7 @@ SignPath-Vorbereitung. Noch unsigniert. Auch dieser Build bestand am
 Spielen zu Fuß und in der Kabine, normale Steuerung und F10-Neuzentrierung.
 Bestätigt auf einem PC durch einen Nutzer; kein Langzeit- oder Mehr-PC-Test.
 
-[Testpaket 0.1.0.3 herunterladen](https://github.com/MR-Scarface-VR/MR_ScarfaceVR-FS25/releases/tag/v0.1.0.3-experimental).
+[Testpaket 0.1.0.4 herunterladen](https://github.com/MR-Scarface-VR/MR_ScarfaceVR-FS25/releases/tag/v0.1.0.4-experimental).
 Die verteilte DLL stammt aus dem lokalen MSVC-Build; die getesteten Bytes sind
 unverändert. Quellen und automatische Prüfungen sind öffentlich.
 
@@ -72,8 +79,8 @@ einen Neustart von FS25 erfordern. Mehrspieler und VR-Hände sind nicht enthalte
 Das Gesamtpaket enthält `START_HIER.txt` mit der Installationsanleitung.
 [Kurzer Testablauf und Rückmeldung](TESTING.md#deutsch).
 Das Gesamtpaket zuerst entpacken: nur `mods/FS25_MR_ScarfaceVR.zip` kommt unentpackt
-in den persönlichen Mods-Ordner; `x64/dinput8.dll` kommt neben die Spiel-EXE
-im Installationsordner `x64`. Eine vorhandene fremde `dinput8.dll` nicht
+in den persönlichen Mods-Ordner; `x64/dinput8.dll`, `x64/openxr_loader.dll`
+und der Ordner `x64/MR_ScarfaceVR_OpenXR/` kommen neben die Spiel-EXE. Eine vorhandene fremde `dinput8.dll` nicht
 überschreiben. Beim Laden des Spielstands **MR_ScarfaceVR Experimentell** aktivieren.
 
 Der native Teil ist eine eigene `dinput8.dll` neben
@@ -87,7 +94,9 @@ Vorhandene gleichnamige Dateien dürfen nur nach Prüfung ihrer Herkunft ersetzt
 werden. Spielstände und Original-EXE/DLLs werden nicht bearbeitet.
 
 Zum Rückbau bei geschlossenem Spiel ausschließlich die eigene geprüfte
-`x64/dinput8.dll` und `mods/FS25_MR_ScarfaceVR.zip` entfernen. Diagnoseartefakte heißen
+`x64/dinput8.dll`, den mitgelieferten `x64/openxr_loader.dll`, den Ordner
+`x64/MR_ScarfaceVR_OpenXR/` und `mods/FS25_MR_ScarfaceVR.zip` entfernen.
+Die separat installierten ReShade-Dateien beibehalten. Diagnoseartefakte heißen
 `fs25-mr_scarfacevr.log` und `fs25-mr_scarfacevr-eye.bmp`. Private Engine-Abbilder unter
 `.analysis/` gehören nicht in ein verteilbares Mod-Paket.
 

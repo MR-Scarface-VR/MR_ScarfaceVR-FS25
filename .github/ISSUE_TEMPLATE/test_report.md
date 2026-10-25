@@ -1,7 +1,7 @@
 ---
 name: "VR test / VR-Test"
 about: "Report a successful test or a problem / Erfolg oder Fehler melden"
-title: "[Test 0.1.0.3] "
+title: "[Test 0.1.0.4] "
 ---
 
 Please fill in English or German. Reports are public; remove personal information
@@ -16,6 +16,7 @@ from logs before attaching them. / Deutsch oder Englisch möglich. Meldungen sin
 - GPU and driver / Grafikkarte und Treiber:
 - Headset / Brille:
 - Connection and active runtime / Verbindung und aktive VR-Laufzeit:
+- ReShade version and effects/preset (if used) / ReShade-Version und Effekte/Preset:
 - Other active mods / Andere aktive Mods:
 - Minutes played / Spieldauer in Minuten:
 
@@ -32,6 +33,7 @@ Use PASS / FAIL / NOT TESTED, or OK / FEHLER / NICHT GETESTET.
 | Walking and normal controls / Zu Fuß mit normaler Steuerung | |
 | Vehicle cab and normal controls / Kabine mit normaler Steuerung | |
 | Terrain detail follows head / Bodenauflösung folgt dem Kopf | |
+| Optional ReShade effect in both eyes / Optionaler ReShade-Effekt in beiden Augen | |
 | F10 recenter / F10-Neuzentrierung | |
 | Menu/world switching / Menüwechsel | |
 | Longer session, actual duration above / Längerer Betrieb, Dauer oben | |

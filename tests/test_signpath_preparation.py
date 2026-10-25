@@ -29,6 +29,13 @@ class SignPathPreparationTests(unittest.TestCase):
         self.assertEqual(set(files), set(PUBLIC_FILES))
         self.assertIn('native/version.rc', files)
         self.assertIn('native/terrain_camera.h', files)
+        self.assertIn('tools/fetch_openxr_loader.ps1', files)
+        loader = json.loads(files['third_party/openxr-loader/ORIGIN.json'])
+        self.assertEqual(loader['tag'], 'release-1.1.65')
+        layer = json.loads(files['mod/MR_ScarfaceVR_OpenXR/ReShade.json'])['api_layer']
+        self.assertEqual(layer['name'], 'XR_APILAYER_reshade')
+        self.assertEqual(layer['library_path'], '..\\dxgi.dll')
+        self.assertFalse(any(name.lower().endswith(('dxgi.dll', 'reshade.dll')) for name in files))
         self.assertIn('LICENSE', files)
         self.assertIn('.github/workflows/build-and-sign.yml', files)
         self.assertFalse(any(name.startswith(('.analysis/', 'build/', 'dist/')) for name in files))
